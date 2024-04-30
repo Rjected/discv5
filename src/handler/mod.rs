@@ -1113,6 +1113,7 @@ impl Handler {
                                 ResponseBody::Nodes { mut nodes, .. } => {
                                     // Received the requested ENR
                                     if let Some(enr) = nodes.pop() {
+                                        debug!(?enr, ?node_address, "Received ENR response");
                                         if self.verify_enr(&enr, &node_address) {
                                             // Notify the application
                                             // This can occur when we try to dial a node without an
@@ -1144,7 +1145,7 @@ impl Handler {
                                 _ => {}
                             }
 
-                            debug!("Session failed invalid ENR response");
+                            debug!(?response, "Session failed invalid ENR response");
                             self.fail_session(&node_address, RequestError::InvalidRemoteEnr, true)
                                 .await;
                             return;
