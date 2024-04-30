@@ -1109,6 +1109,7 @@ impl Handler {
                     if let Some(request_id) = session.awaiting_enr.as_ref() {
                         if &response.id == request_id {
                             session.awaiting_enr = None;
+                            debug!(?response, "Verifying response");
                             match response.body {
                                 ResponseBody::Nodes { mut nodes, .. } => {
                                     // Received the requested ENR
@@ -1145,7 +1146,7 @@ impl Handler {
                                 _ => {}
                             }
 
-                            debug!(?response, "Session failed invalid ENR response");
+                            debug!("Session failed invalid ENR response");
                             self.fail_session(&node_address, RequestError::InvalidRemoteEnr, true)
                                 .await;
                             return;
