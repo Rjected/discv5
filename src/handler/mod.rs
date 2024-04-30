@@ -1115,32 +1115,32 @@ impl Handler {
                                     // Received the requested ENR
                                     if let Some(enr) = nodes.pop() {
                                         debug!(?enr, ?node_address, "Received ENR response");
-                                        if self.verify_enr(&enr, &node_address) {
-                                            // Notify the application
-                                            // This can occur when we try to dial a node without an
-                                            // ENR. In this case we have attempted to establish the
-                                            // connection, so this is an outgoing connection.
-                                            if let Err(e) = self
-                                                .service_send
-                                                .send(HandlerOut::Established(
-                                                    enr,
-                                                    node_address.socket_addr,
-                                                    ConnectionDirection::Outgoing,
-                                                ))
-                                                .await
-                                            {
-                                                warn!("Failed to inform established outgoing connection {}", e)
-                                            }
-                                            return;
+                                        // if self.verify_enr(&enr, &node_address) {
+                                        // Notify the application
+                                        // This can occur when we try to dial a node without an
+                                        // ENR. In this case we have attempted to establish the
+                                        // connection, so this is an outgoing connection.
+                                        if let Err(e) = self
+                                            .service_send
+                                            .send(HandlerOut::Established(
+                                                enr,
+                                                node_address.socket_addr,
+                                                ConnectionDirection::Outgoing,
+                                            ))
+                                            .await
+                                        {
+                                            warn!("Failed to inform established outgoing connection {}", e)
                                         }
+                                        return;
+                                        // }
 
-                                        // The ENR doesn't verify. Notify application.
-                                        self.notify_unverifiable_enr(
-                                            enr,
-                                            node_address.socket_addr,
-                                            node_address.node_id,
-                                        )
-                                        .await;
+                                        // // The ENR doesn't verify. Notify application.
+                                        // self.notify_unverifiable_enr(
+                                        //     enr,
+                                        //     node_address.socket_addr,
+                                        //     node_address.node_id,
+                                        // )
+                                        // .await;
                                     }
                                 }
                                 _ => {}
